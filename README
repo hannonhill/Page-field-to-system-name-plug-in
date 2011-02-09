@@ -1,0 +1,1 @@
+This is a fully functional Eclipse project generating a custom Asset Factory Plug-in which allows Cascade users to specify any combination of metadata fields (wired or dynamic) and/or Data Definition fields as the basis for an auto-generated system name for Page assets.
