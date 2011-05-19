@@ -103,8 +103,7 @@ public final class PageFieldsToSystemNamePlugin extends StructuredDataPagePlugin
     				this.setAllowCreation(false, "PageFieldsToSystemNamePlugin: The dynamic metadata field '" + stIdentifier + "' either does not exist or contains no value in the asset being created.");
     				throw new FatalPluginException("PageFieldsToSystemNamePlugin: The dynamic metadata field '" + stIdentifier + "' either does not exist or contains no value in the asset being created.");
     			}
-    			stNodeVal = this.utilityProvider.getFilenameNormalizer().normalize(stNodeVal, new ArrayList());
-    			stNodeVal = stNodeVal.trim().replace(' ', '-').toLowerCase();
+    			
     		}
     		else if (stIdentifier.contains(STRUCTURED_DATA_TOKEN))
     		{
@@ -121,8 +120,7 @@ public final class PageFieldsToSystemNamePlugin extends StructuredDataPagePlugin
     				this.setAllowCreation(false, "PageFieldsToSystemNamePlugin: The structured data field '" + stIdentifier + "' either does not exist or contains no value in the asset being created.");
     				throw new FatalPluginException("PageFieldsToSystemNamePlugin: The structured data field '" + stIdentifier + "' either does not exist or contains no value in the asset being created.");
     			}
-    			stNodeVal = this.utilityProvider.getFilenameNormalizer().normalize(stNodeVal, new ArrayList());
-    			stNodeVal = stNodeVal.trim().replace(' ', '-').toLowerCase();
+    			
     		}
     		else
     		{
@@ -133,9 +131,11 @@ public final class PageFieldsToSystemNamePlugin extends StructuredDataPagePlugin
     				this.setAllowCreation(false, "PageFieldsToSystemNamePlugin: The wired metadata field '" + stIdentifier + "' either does not exist or contains no value in the asset being created.");
     				throw new FatalPluginException("PageFieldsToSystemNamePlugin: The wired metadata field '" + stIdentifier + "' either does not exist or contains no value in the asset being created.");
     			}
-    			stNodeVal = this.utilityProvider.getFilenameNormalizer().normalize(stNodeVal, new ArrayList());
-    			stNodeVal = stNodeVal.trim().replace(' ', '-').toLowerCase();
+    			
     		}
+    		
+    		stNodeVal = this.utilityProvider.getFilenameNormalizer().normalize(stNodeVal, new ArrayList());
+			stNodeVal = stNodeVal.trim().replace(" ", stSpaceToken).toLowerCase();
     		
     		newName.append(stNodeVal);
     		newName.append(stConcatToken);

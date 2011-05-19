@@ -3,9 +3,11 @@ package com.hannonhill.cascade.plugin;
 import com.hannonhill.cascade.api.asset.common.Metadata;
 import com.hannonhill.cascade.api.asset.common.DynamicMetadataField;
 import com.hannonhill.cascade.api.asset.common.StructuredDataNode;
-import com.cms.assetfactory.StructuredDataPlugin;
+import com.cms.assetfactory.BaseAssetFactoryPlugin;
 
 import java.util.Date;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Formatter;
 
@@ -24,7 +26,7 @@ import java.util.Formatter;
  * 
  * @author Brent Arrington
  */
-public abstract class StructuredDataPagePlugin extends StructuredDataPlugin
+public abstract class StructuredDataPagePlugin extends BaseAssetFactoryPlugin
 {
 	protected final static String CUSTOM_METADATA_TOKEN = "dynamic-metadata";
 	protected final static String STRUCTURED_DATA_TOKEN = "system-data-structure";
@@ -136,14 +138,125 @@ public abstract class StructuredDataPagePlugin extends StructuredDataPlugin
 	 * to passing along to <code>super.searchStructuredData(structuredData,sdIdentifier)</code>
 	 * @see StructuredDataPlugin
 	 */
-	protected String searchStructuredData(StructuredDataNode[] structuredData, String sdIdentifier)
-	{
+    protected String searchStructuredData(StructuredDataNode[] structuredData, String sdIdentifier)
+    {
 		if (sdIdentifier.contains(STRUCTURED_DATA_TOKEN))
 		{
 			int startIndex = sdIdentifier.indexOf(STRUCTURED_DATA_TOKEN) + STRUCTURED_DATA_TOKEN.length();
 			sdIdentifier = sdIdentifier.substring(startIndex);
 		}
-		
-		return super.searchStructuredData(structuredData,sdIdentifier);
-	}
+    	
+        if (sdIdentifier.startsWith("/"))
+            sdIdentifier = sdIdentifier.substring(1);
+
+        if (sdIdentifier.contains("/"))
+        {
+            String[] nodePath = sdIdentifier.split("/");
+            String curNode = nodePath[0];
+            String subNodes = "";
+            for (int i = 1; i < nodePath.length; i++)
+            {
+                subNodes += nodePath[i] + (i != nodePath.length - 1 ? "/" : "");
+            }
+
+            for (StructuredDataNode node : structuredData)
+            {
+                if (node.isGroup() && curNode.equals(node.getIdentifier()))
+                {
+                    String value = searchStructuredData(node.getGroup(), subNodes);
+                    if (value != null)
+                    {
+                        return value;
+                    }
+                }
+            }
+        }
+        else
+        {
+            for (StructuredDataNode node : structuredData)
+            {
+                if (node.isGroup())
+                {
+                    String value = searchStructuredData(node.getGroup(), sdIdentifier);
+                    if (value != null)
+                    {
+                        return value;
+                    }
+                }
+                else if (sdIdentifier.equals(node.getIdentifier()) && node.isText())
+                {
+                    String[] nodeValues = node.getTextValues();
+                    String nodeValue = null;
+                    if (nodeValues.length > 0 && nodeValues[0] != null && nodeValues[0].trim() != "")
+                    {
+                        nodeValue = nodeValues[0];
+                        
+                        // for date/time & calendar, return formatted date string, i.e. yyyy-mm-dd
+                        if (node.getTextNodeOptions().isDatetime())
+                        {
+                        	Date date = new Date(Long.valueOf(nodeValue).longValue());
+                			Calendar cal = Calendar.getInstance();
+                			cal.setTime(date);
+                			Formatter format = new Formatter();
+                			String stDate = format.format("%tF", cal).toString();
+                			return stDate;                  	
+                        }
+                        else if (node.getTextNodeOptions().isCalendar())
+                        {
+                        	try
+                        	{
+                        		String[] dateParts = nodeValue.split("-");
+                        		int month = Integer.parseInt(dateParts[0]) - 1; // because month is zero-based
+                        		int day = Integer.parseInt(dateParts[1]);
+                        		int year = Integer.parseInt(dateParts[2]);
+                        		
+                    			Calendar cal = Calendar.getInstance();
+                    			cal.set(year, month, day);
+                    			Formatter format = new Formatter();
+                    			String stDate = format.format("%tF", cal).toString();
+                    			return stDate;  
+                        	}
+                        	catch (Exception e)
+                        	{
+                        		return null;
+                        	}
+                        	
+                        }
+                        // for check-box & multi-select (where multiple values are allowed), concatenate all selected values
+                        else if (node.getTextNodeOptions().isCheckbox() || node.getTextNodeOptions().isMultiselect())
+                        {
+                        	StringBuffer multiVal = new StringBuffer();
+                        	for (int i = 0; i < nodeValues.length; i++)
+                        	{
+                        		if (nodeValues[i] != null && nodeValues[i].trim() != "")
+                        		{
+                        			multiVal.append(nodeValues[i].trim());
+                        			if (i < (nodeValues.length - 1))
+                        			{
+                        				multiVal.append(" ");
+                        			}
+                        		}
+                        		
+                        	}
+                        	
+                        	if (multiVal.length() > 0)
+                        	{
+                        		return multiVal.toString();
+                        	}
+                        }
+                        else if (!(node.getTextNodeOptions().isWysiwyg()))
+                        {
+                        	return nodeValue;
+                        }
+                    }
+                    
+
+
+                }
+
+            }
+        }
+        return null;
+    }
+
 }
