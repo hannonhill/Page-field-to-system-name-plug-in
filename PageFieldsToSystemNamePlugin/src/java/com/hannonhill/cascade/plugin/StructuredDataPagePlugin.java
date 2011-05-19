@@ -126,7 +126,25 @@ public abstract class StructuredDataPagePlugin extends BaseAssetFactoryPlugin
 		{
 			if (dynamicFields[i].getName().equals(stNodeName))
 			{
-				return dynamicFields[i].getValues()[0].trim();
+				
+				StringBuffer multiVal = new StringBuffer();
+            	for (int j = 0; j < dynamicFields[i].getValues().length; j++)
+            	{
+            		if (dynamicFields[i].getValues()[j] != null && dynamicFields[i].getValues()[j].trim() != "")
+            		{
+            			multiVal.append(dynamicFields[i].getValues()[j].trim());
+            			if (j < (dynamicFields[i].getValues().length - 1))
+            			{
+            				multiVal.append(" ");
+            			}
+            		}
+            		
+            	}
+            	
+            	if (multiVal.length() > 0)
+            	{
+            		return multiVal.toString();
+            	}
 			}
 		}
 		

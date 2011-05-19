@@ -4,53 +4,57 @@ Version History:
 		- 0.1 Initial Version
 		- 0.2 Updating instructions for importing project, exporting JAR file, and incorporating into a Cascade instance
 
-This is a fully functional Eclipse project generating a custom Asset Factory Plug-in which allows Cascade users to specify any
-combination of metadata fields (wired or dynamic) and/or Data Definition fields as the basis for an auto-generated system name for 
-Page assets.  For Data Definition (structured data) fields, the plugin supports: text fields, text areas, check boxes, 
-multi-selects, drop-down menus, radio buttons, calendar and date/time fields.  For multi-select and check box fields (which
-may contain multiple values) all selected values for the field will be concatenated.  For calendar and date/time fields
-values will be formatted as "yyyy-mm-dd".
+This is a fully functional Eclipse project generating a custom Asset Factory Plug-in which allows Cascade 
+users to specify any combination of metadata fields (wired or dynamic) and/or Data Definition fields as the 
+basis for an auto-generated system name for Page assets.  For Data Definition (structured data) fields, the 
+plugin supports: text fields, text areas, check boxes, multi-selects, drop-down menus, radio buttons, 
+calendar and date/time fields.  For multi-select and check box fields (which may contain multiple values) all 
+selected values for the field will be concatenated.  For calendar and date/time fields values will be 
+formatted as "yyyy-mm-dd".
 
 Pre-requisites:
-This article assumes you have the latest Java Runtime Enviornment (JRE) installed on your machine (required by Eclipse). 
-The JRE must be version 1.5 or later.
+This article assumes you have the latest Java Runtime Enviornment (JRE) installed on your machine (required 
+by Eclipse). The JRE must be version 1.5 or later.
 
 Collecting the tools:
-Before you get started, you should collect the tools you need to compile and export this plugin. Please download the 
-following two items:
+Before you get started, you should collect the tools you need to compile and export this plugin. Please 
+download the following two items:
 
 Eclipse IDE (http://www.eclipse.org)
 Page-field-to-system-name-plugin Project (this project)
 
 
 Installing Eclipse and Opening the Project:
-Once you download Eclipse you will want to unzip it to a directory of your choosing (suggestions: c:\java\eclipse or 
-c:\Program Files\Eclipse on Windows, /usr/local/eclipse on Linux, or ~/java/eclipse on OS X). Start Eclipse and you will be 
-prompted to choose a workspace location - the default location should suffice. Make note of it as this is the location to which 
-we will unzip the Project.
+Once you download Eclipse you will want to unzip it to a directory of your choosing (suggestions: 
+c:\java\eclipse or c:\Program Files\Eclipse on Windows, /usr/local/eclipse on Linux, 
+or ~/java/eclipse on OS X). Start Eclipse and you will be prompted to choose a workspace location - the 
+default location should suffice. Make note of it as this is the location to which we will unzip the Project.
 
-Next, you will unzip the Project ZIP file to your workspace directory. The zip should create it's own directory inside your 
-workspace directory.
+Next, you will unzip the Project ZIP file to your workspace directory. The zip should create it's own 
+directory inside your workspace directory.
 
-Finally we will bring the Plugin Project into Eclipse. To do this, right click in the package explorer view on the left hand 
-side and select "Import...". Then, select "Existing Projects into Workspace" under "General" and click "Next". Select "Browse" 
-next to "Select root directory:" and browse to the directory created when you unzipped the SDK. You should then see 
-"Asset Factory Plugin" under "Projects". Click "Finish".
+Finally we will bring the Plugin Project into Eclipse. To do this, right click in the package explorer view 
+on the left hand side and select "Import...". Then, select "Existing Projects into Workspace" under "General" 
+and click "Next". Select "Browse" next to "Select root directory:" and browse to the directory created when 
+you unzipped the SDK. You should then see "Asset Factory Plugin" under "Projects". Click "Finish".
 
 Generating JAR File and Importing into Cascade:
-First, create a JAR file containing this plug-in file and the resource bundle(s) it references. To do this, right click on your 
-project in the Package Explorer (left hand side) in Eclipse and select "Export...". Under the "Java" section, select JAR file and 
-click "Next". Next you will be prompted as to which files to include. Ensure the checkboxes for the plug-in package and resources 
-package are selected. The checkbox next to the "src" and "doc" folders should be unchecked while "src/java" should be checked. If 
-you click on your project parent folder, you will see on the right-hand side that other files, such as ".classpath" and ".project" 
-are included, which are unnecessary and should be unchecked so they are not included in the JAR. The rest of the default options 
-should be fine (only things checked are "Export generated class files and resources" and "Compress the contents of the JAR file"). 
-Under "Select the export destination:", select where the JAR file will be temporarily placed before deployment to Cascade Server. 
+First, create a JAR file containing this plug-in file and the resource bundle(s) it references. To do this, 
+right click on your project in the Package Explorer (left hand side) in Eclipse and select "Export...". Under 
+the "Java" section, select JAR file and click "Next". Next you will be prompted as to which files to include. 
+Ensure the project parent folder is checked and expand the project parent folder in the window to the left. 
+The checkbox next to the "src" and "doc" folders should be left unchecked while "src/java" should be checked. 
+If you click on your project parent folder, you will see on the right-hand side that other files, such as 
+".classpath" and ".project" are included, which are unnecessary and should be unchecked so they are not 
+included in the JAR. The rest of the default options should be fine (only things checked are "Export 
+generated class files and resources" and "Compress the contents of the JAR file"). Under "Select the export 
+destination:", select where the JAR file will be temporarily placed before deployment to Cascade Server. 
 Click Finish.
 
-To deploy the plug-in JAR, first you must shut down Cascade Server. Next, locate the JAR file and place this file in 
-<Tomcat_Installation_Directory>/webapps/ROOT/WEB-INF/lib folder. JAR files placed in this location are automatically loaded along 
-with other libraries needed by Cascade Server. Once you have done this, start Cascade Server and from the Global area, go to 
-the Asset Factory section in the Administration area and select Manage Plugins. In the "Add a Plugin" text field, enter the fully 
-qualified Java class name of this plug-in ("com.hannonhill.cascade.plugin.PageFieldsToSystemNamePlugin") and click Submit. 
-The plug-in will then be added and will be accessible in the "Plug-ins" tab when editing an Asset Factory.
+To deploy the plug-in JAR, first you must shut down Cascade Server. Next, locate the JAR file and place this 
+file in <Tomcat_Installation_Directory>/webapps/ROOT/WEB-INF/lib folder. JAR files placed in this location 
+are automatically loaded along with other libraries needed by Cascade Server. Once you have done this, start 
+Cascade Server and from the Global area, go to the Asset Factory section in the Administration area and 
+select Manage Plugins. In the "Add a Plugin" text field, enter the fully qualified Java class name of this 
+plug-in ("com.hannonhill.cascade.plugin.PageFieldsToSystemNamePlugin") and click Submit. The plug-in will 
+then be added and will be accessible in the "Plug-ins" tab when editing an Asset Factory.
