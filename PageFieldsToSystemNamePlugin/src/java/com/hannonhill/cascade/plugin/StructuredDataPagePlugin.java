@@ -6,8 +6,6 @@ import com.hannonhill.cascade.api.asset.common.StructuredDataNode;
 import com.cms.assetfactory.BaseAssetFactoryPlugin;
 
 import java.util.Date;
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Formatter;
 

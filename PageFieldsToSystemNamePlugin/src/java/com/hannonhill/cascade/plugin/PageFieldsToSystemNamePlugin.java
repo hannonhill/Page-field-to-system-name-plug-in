@@ -143,7 +143,7 @@ public final class PageFieldsToSystemNamePlugin extends StructuredDataPagePlugin
     		}
     		
     		// normalize for URL-safe system name
-    		stNodeVal = this.utilityProvider.getFilenameNormalizer().normalize(stNodeVal, new ArrayList());
+    		stNodeVal = this.utilityProvider.getFilenameNormalizer().normalize(stNodeVal, new ArrayList<Character>());
     		
     		// replace spaces with space token
 			stNodeVal = stNodeVal.trim().replace(" ", stSpaceToken).toLowerCase();
