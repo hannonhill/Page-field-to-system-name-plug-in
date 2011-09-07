@@ -30,6 +30,17 @@ public abstract class StructuredDataPagePlugin extends BaseAssetFactoryPlugin
 {
 	protected final static String CUSTOM_METADATA_TOKEN = "dynamic-metadata";
 	protected final static String STRUCTURED_DATA_TOKEN = "system-data-structure";
+	protected final static String METADATA_TITLE = "title";
+	protected final static String METADATA_DISPLAY_NAME = "display-name";
+	protected final static String METADATA_DESCRIPTION = "description";
+	protected final static String METADATA_AUTHOR = "author";
+	protected final static String METADATA_KEYWORDS = "keywords";
+	protected final static String METADATA_SUMMARY = "summary";
+	protected final static String METADATA_TEASER = "teaser";
+	protected final static String METADATA_START_DATE = "start-date";
+	protected final static String METADATA_END_DATE = "end-date";
+	protected final static String METADATA_REVIEW_DATE = "review-date";
+	protected final static String METADATA_EXPIRATION_FOLDER = "expiration-folder";
 	/**
 	 * Searches the provided Metadata for the given wired metadata field name (stIdentifier) and
 	 * returns its value (if any).
@@ -39,35 +50,35 @@ public abstract class StructuredDataPagePlugin extends BaseAssetFactoryPlugin
 	 */
 	protected String searchWiredMetadata(Metadata metadata, String stIdentifier)
 	{
-		if (stIdentifier.contains("title"))
+		if (stIdentifier.contains(METADATA_TITLE))
 		{
 			return metadata.getTitle().trim();
 		}
-		else if (stIdentifier.contains("display-name"))
+		else if (stIdentifier.contains(METADATA_DISPLAY_NAME))
 		{
 			return metadata.getDisplayName().trim();
 		}
-		else if (stIdentifier.contains("description"))
+		else if (stIdentifier.contains(METADATA_DESCRIPTION))
 		{
 			return metadata.getDescription().trim();
 		}
-		else if (stIdentifier.contains("author"))
+		else if (stIdentifier.contains(METADATA_AUTHOR))
 		{
 			return metadata.getAuthor().trim();
 		}
-		else if (stIdentifier.contains("keywords"))
+		else if (stIdentifier.contains(METADATA_KEYWORDS))
 		{
 			return metadata.getKeywords().trim();
 		}
-		else if (stIdentifier.contains("summary"))
+		else if (stIdentifier.contains(METADATA_SUMMARY))
 		{
 			return metadata.getSummary().trim();
 		}
-		else if (stIdentifier.contains("teaser"))
+		else if (stIdentifier.contains(METADATA_TEASER))
 		{
 			return metadata.getTeaser().trim();
 		}
-		else if (stIdentifier.contains("start-date"))
+		else if (stIdentifier.contains(METADATA_START_DATE))
 		{
 			// use date format of: yyyy-mm-dd
 			Date startDate = metadata.getStartDate();
@@ -77,7 +88,7 @@ public abstract class StructuredDataPagePlugin extends BaseAssetFactoryPlugin
 			String stDate = format.format("%tF", cal).toString();
 			return stDate;
 		}
-		else if (stIdentifier.contains("end-date"))
+		else if (stIdentifier.contains(METADATA_END_DATE))
 		{
 			// use date format of yyyy-mm-dd
 			Date endDate = metadata.getEndDate();
@@ -87,7 +98,7 @@ public abstract class StructuredDataPagePlugin extends BaseAssetFactoryPlugin
 			String stDate = format.format("%tF", cal).toString();
 			return stDate;
 		}
-		else if (stIdentifier.contains("review-date"))
+		else if (stIdentifier.contains(METADATA_REVIEW_DATE))
 		{
 			// use date format of yyyy-mm-dd
 			Date reviewDate = metadata.getReviewDate();
@@ -97,8 +108,9 @@ public abstract class StructuredDataPagePlugin extends BaseAssetFactoryPlugin
 			String stDate = format.format("%tF", cal).toString();
 			return stDate;
 		}
-		else if (stIdentifier.contains("expiration-folder"))
+		else if (stIdentifier.contains(METADATA_EXPIRATION_FOLDER))
 		{
+			// not a valid field for auto-name generation
 			return null;
 		}
 		return null;

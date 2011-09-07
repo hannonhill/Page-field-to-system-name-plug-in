@@ -54,6 +54,9 @@ public final class PageFieldsToSystemNamePlugin extends StructuredDataPagePlugin
     {
         //code in this method will be executed after the users submits the creation.
         //This could be used for data validation or post-population/property transfer.
+    	
+    	// check for valid asset type for this plugin
+    	// throw exception & forbid asset creation for invalid types
     	if (!this.isValidType(asset))
     	{
     		this.setAllowCreation(false, "PageFieldsToSystemNamePlugin: This plug-in may only be applied to Page asset factories.");
@@ -63,6 +66,7 @@ public final class PageFieldsToSystemNamePlugin extends StructuredDataPagePlugin
     	Page page = (Page)asset;
     	
     	String stIdentifiers = getParameter(FIELDIDS_PARAM_NAME_KEY);
+    	// if no fields are specified for auto-naming values, throw exception & forbid asset creation
     	if (stIdentifiers == null || stIdentifiers.trim().equals(""))
     	{
     		this.setAllowCreation(false, "PageFieldsToSystemNamePlugin: Field IDs are required for this plugin.");
@@ -70,12 +74,14 @@ public final class PageFieldsToSystemNamePlugin extends StructuredDataPagePlugin
     	}
     	
     	String stSpaceToken = getParameter(SPACETOKEN_PARAM_NAME_KEY);
+    	// if no space token is explicitly provided, default to dash ("-")
     	if (stSpaceToken == null || stSpaceToken.trim().equals(""))
     	{
     		stSpaceToken = "-";
     	}
     	
        	String stConcatToken = getParameter(CONCATTOKEN_PARAM_NAME_KEY);
+       	// if no concatenation token is explicitly provided, default to dash ("-")
     	if (stConcatToken == null || stConcatToken.trim().equals(""))
     	{
     		stConcatToken = "-";
@@ -84,6 +90,8 @@ public final class PageFieldsToSystemNamePlugin extends StructuredDataPagePlugin
     	StringBuilder newName = new StringBuilder();
     	String[] arIdentifiers = stIdentifiers.split(",");
     	
+    	// iterate through specified fields & use derived values to build name string
+    	// if any of the specified fields contain null or empty values, throw exception & forbid asset creation
     	for (String stIdentifier : arIdentifiers)
     	{
     		String stNodeVal = "";
@@ -134,13 +142,19 @@ public final class PageFieldsToSystemNamePlugin extends StructuredDataPagePlugin
     			
     		}
     		
+    		// normalize for URL-safe system name
     		stNodeVal = this.utilityProvider.getFilenameNormalizer().normalize(stNodeVal, new ArrayList());
+    		
+    		// replace spaces with space token
 			stNodeVal = stNodeVal.trim().replace(" ", stSpaceToken).toLowerCase();
     		
     		newName.append(stNodeVal);
+    		
+    		// append concatenation token
     		newName.append(stConcatToken);
     	}
     	
+    	// strip trailing concatenation token
     	if (newName.length() > stConcatToken.length())
     	{
     		newName.delete(newName.length() - stConcatToken.length(), newName.length());
@@ -154,6 +168,7 @@ public final class PageFieldsToSystemNamePlugin extends StructuredDataPagePlugin
     		throw new FatalPluginException("PageFieldsToSystemNamePlugin:  None of the following fields are populated: " + stIdentifiers);
     	}
     	
+    	// if all is well, update the asset's system name & allow creation of the asset
     	page.setName(stNewName);
     	this.setAllowCreation(true, "");
     }
@@ -166,10 +181,8 @@ public final class PageFieldsToSystemNamePlugin extends StructuredDataPagePlugin
     {
         //code in this method will be executed before the user is presented with the
         //initial edit screen. This could be used for pre-population, etc.
-
-    	/*if (!(isValidType(asset))) {
-    	  return;
-    	}*/
+    	
+    	// suppress the system name field in the page creation UI, since it will be auto-generated
     	asset.setHideSystemName(true);
     	if (asset.getName() == null || asset.getName().trim().equals(""))
     	{
